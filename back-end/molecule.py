@@ -12,7 +12,10 @@ if _swig_python_version_info < (2, 7, 0):
 if __package__ or "." in __name__:
     from . import _molecule
 else:
-    import _molecule
+    import sys;
+    newPath = sys.path[0];
+    sys.path.insert(1, newPath.replace('back-end', ''));
+    from lib import _molecule;
 
 try:
     import builtins as __builtin__

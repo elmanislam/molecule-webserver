@@ -26,8 +26,12 @@ TESTS AND COMMENTS
   - Add comments
   - Don't forget to change file paths from 'python3.9'
     to 'python3.7m' when testing on school server and before submitting
-  
+    - also change 'swig' to 'swig3.0'
+    - remove 'from lib' in molecule.py
 
+ERRORS
+
+  - ImportError: libmol.so: cannot open shared object file: No such file or directory
 
 QUESTIONS
 When I compile make, I get a warning message indicating that the 

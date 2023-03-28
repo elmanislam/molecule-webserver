@@ -1,16 +1,19 @@
 import MolDisplay;
 import sqlite3;
+
 import os;
 
 class Database():
 
   def __init__(self, reset=False ):
-    
+
     if (reset == True): #only remove the file if it exists in local directory
+    
       if os.path.isfile("molecule.db") == True:
         os.remove("molecule.db");
 
-    self.conn = sqlite3.connect("molecule.db"); #make database connection to a file
+
+    self.conn = sqlite3.connect( "molecule.db"); #make database connection to a file
 
 
   def create_tables(self):
@@ -227,3 +230,6 @@ class Database():
     return gradient_str;
 
 
+if __name__ == "__main__":
+    db = Database(reset=True);
+    #db.create_tables();
