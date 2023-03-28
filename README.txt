@@ -37,4 +37,7 @@ Should I make a command in my makefile that creates the molecule_wrap.c and mole
 files with swig, or will you already have the files ready when you test my program?
 
 
+sources for html and css: https://getcssscan.com/css-box-shadow-examples
+
+
 
