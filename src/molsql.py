@@ -4,6 +4,12 @@ import sqlite3;
 import os;
 
 
+DEFAULT_ELEMENTS = {
+  'H': ( 1, 'Hydrogen', 'FFFFFF', '050505', '020202', 25 ),
+  'C': ( 6, 'Carbon', '808080', '010101', '000000', 40 ),
+  'N': ( 7, 'Nitrogen', '0000FF', '000005', '000002', 40 ),
+  'O': ( 8, 'Oxygen', 'FF0000', '050000', '020000', 40 )
+}
 
 class Database():
 
@@ -109,6 +115,16 @@ class Database():
   def add_atom(self, molname, atom ):
     
     atom_data = (atom.element, atom.x, atom.y, atom.z);
+
+    element_exists = self.conn.execute(f"SELECT ELEMENT_CODE FROM Elements WHERE Elements.ELEMENT_CODE='{atom.element}'").fetchone();
+
+    if element_exists == None: # If the element does not exist, create default values for it
+        if atom.element in DEFAULT_ELEMENTS.keys():
+            t = DEFAULT_ELEMENTS.get(atom.element);
+            self['Elements'] = (t[0], atom.element, t[1], t[2], t[3], t[4], t[5]);
+          
+        else:
+            self['Elements'] =  (0, atom.element, 'Unnamed Element', 'FFFFFF', '969696', '000000', 40 );
 
     self.conn.execute("INSERT INTO Atoms(ELEMENT_CODE, X, Y, Z) VALUES(?, ?, ?, ?)", atom_data);
     id = self.conn.execute("SELECT last_insert_rowid()").fetchone(); # obtain the most recently created id from any table
@@ -232,3 +248,12 @@ class Database():
     return gradient_str;
 
 
+  ## Helper function: resets radial gradients and update radius and element dicts
+  def update_database( self ):
+
+    MolDisplay.radius = self.radius();
+    MolDisplay.element_name = self.element_name();
+    MolDisplay.header = """<svg version="1.1" width="1000" height="1000"
+ xmlns="http://www.w3.org/2000/svg">""";
+    
+    MolDisplay.header += self.radial_gradients();

@@ -12,19 +12,14 @@ PATH = os.path.realpath(__file__); # path to current file
 DIR = os.path.dirname(PATH); # name of current directory
 HTML = DIR + "/templates";
 
+
+
 class MyHandler( BaseHTTPRequestHandler ):
 
   db = molsql.Database(reset=True);
   db.create_tables();
 
   pages = [ '/add-molecule.html', '/add-element.html', '/remove-element.html', '/view-molecule.html', '/display.html'];
-  db['Elements'] = ( 1, 'H', 'Hydrogen', 'FFFFFF', '050505', '020202', 25 );
-  db['Elements'] = ( 6, 'C', 'Carbon', '808080', '010101', '000000', 40 );
-  db['Elements'] = ( 7, 'N', 'Nitrogen', '0000FF', '000005', '000002', 40 );
-  db['Elements'] = ( 8, 'O', 'Oxygen', 'FF0000', '050000', '020000', 40 );
-  MolDisplay.radius = db.radius();
-  MolDisplay.element_name = db.element_name();
-  MolDisplay.header += db.radial_gradients();
 
   
   def do_GET(self):
@@ -170,14 +165,20 @@ class MyHandler( BaseHTTPRequestHandler ):
         if (temp_dict): # if the dictionary is not empty
             if symbol in temp_dict: # if the element already exists 
                 print("Element " + str(symbol) + " Already exists");
-                self.db.conn.execute(f" DELETE FROM Elements WHERE ELEMENT_CODE={symbol};") # delete the element
-                alert_element_success = alert_element_success.replace("submitted", "updated"); # update the element
+                self.db.conn.execute(f" DELETE FROM Elements WHERE ELEMENT_CODE='{symbol}';") # delete the element
+                alert_element_success = alert_element_success.replace("submitted", "updated"); # change message to "updated"
           
-        
-        self.db['Elements'] = ( id, symbol, element, colour1, colour2, colour3, radius);
+        print("colors:")
+ 
+        colour1 = str(colour1).replace('#', '').upper();
+        colour2 = str(colour2).replace('#', '').upper();
+        colour3 = str(colour3).replace('#', '').upper();
+        print(colour1, colour2, colour3);
+
+        self.db['Elements'] = ( id, symbol, element, colour1, colour2, colour3, radius); # add or update the element
 
 
-        fp = open(DIR  + '/index.html'); 
+        fp = open(HTML  + '/index.html'); 
         web_page = fp.read();
         fp.close();
 
@@ -224,7 +225,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             file_name = file_field.filename
             file_data = file_field.file.read()
 
-            web_fp = open(DIR  + '/add-molecule.html'); 
+            web_fp = open(HTML  + '/add-molecule.html'); 
             web_page = web_fp.read();
             web_fp.close();
 
@@ -245,7 +246,7 @@ class MyHandler( BaseHTTPRequestHandler ):
 
             else: # The molecule is new; add it to the table
 
-                web_fp = open(DIR  + '/display.html'); 
+                web_fp = open(HTML  + '/display.html'); 
                 web_page = web_fp.read();
                 web_fp.close();
 
@@ -255,11 +256,14 @@ class MyHandler( BaseHTTPRequestHandler ):
 
                 fp = open(DIR + "/temp_output_file.txt");
 
+
                 self.db.add_molecule(molecule_name, fp);
+                self.db.update_database();
+
                 mol = self.db.load_mol(molecule_name);
 
+                web_page = web_page.replace("</h1>", molecule_name + " Molecule</h1>");
                 web_page = web_page.replace("<svg></svg>", mol.svg());
-
                 os.remove(DIR + "/temp_output_file.txt") # Delete the temporary file after obtaining information
 
 
@@ -286,14 +290,17 @@ class MyHandler( BaseHTTPRequestHandler ):
           print("Molecule Name: ");
           print(molecule_name);
 
+          self.db.update_database();
           mol = self.db.load_mol(molecule_name);
 
-          web_fp = open(DIR  + '/display.html'); 
+          web_fp = open(HTML  + '/display.html'); 
           web_page = web_fp.read();
           web_fp.close();
 
           mol = self.db.load_mol(molecule_name);
           print(mol.svg())
+
+          web_page = web_page.replace("</h1>", molecule_name + " Molecule</h1>");
           web_page = web_page.replace("<svg></svg>", mol.svg());
 
           self.send_response(200 );  # OK

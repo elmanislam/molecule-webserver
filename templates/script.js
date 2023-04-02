@@ -53,7 +53,7 @@ $(document).ready(function() {
         }
 
       });
-      alert(`Element ${name} successfully deleted`);
+      
       window.location.replace('/remove-element.html');
 
     }
