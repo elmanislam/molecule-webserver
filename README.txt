@@ -32,6 +32,11 @@ TESTS AND COMMENTS
 ERRORS
 
   - ImportError: libmol.so: cannot open shared object file: No such file or directory
+  - no such module: _molecule
+      make sure molecule.py is in the src directory, and on 13
+      change "from . import _molecule" to "from .lib import _molecule"
+
+
 
 QUESTIONS
 When I compile make, I get a warning message indicating that the 

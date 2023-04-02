@@ -1,7 +1,9 @@
-import MolDisplay;
+from . import MolDisplay;
 import sqlite3;
 
 import os;
+
+
 
 class Database():
 
@@ -230,6 +232,3 @@ class Database():
     return gradient_str;
 
 
-if __name__ == "__main__":
-    db = Database(reset=True);
-    #db.create_tables();

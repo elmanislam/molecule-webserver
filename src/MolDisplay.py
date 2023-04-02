@@ -1,5 +1,4 @@
-from molecule import molecule;
-
+from .molecule import molecule;
 radius = {};
 element_name = {};
 header = """<svg version="1.1" width="1000" height="1000"
@@ -120,7 +119,7 @@ class Molecule(molecule):
 
     if content_length > 0:
       rfile_str = file_obj.read(content_length) 
-      rfile_str = rfile_str.split("\r\n")[4:]  # Skip an extra 4 lines to ignore headers
+      rfile_str = rfile_str.decode("utf-8").split("\r\n")[4:]  # Skip an extra 4 lines to ignore headers
       rfile_str = '\n'.join(rfile_str)
  
     else:

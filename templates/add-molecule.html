@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="style.css"></head>
+
+    <style type="text/css">
+
+
+
+    </style>
+    <title>Add Element</title>
+  </head>
+  <body>
+    <div class="container">
+
+      <div class="header">
+        <div class="logo">
+          <a href="/">molecule-webserver</a> / add-molecule
+        </div>
+      </div>
+
+      <div class="content" style="display:inline-block; place-self: center">
+
+        <h1>Add Molecule</h1>
+
+          <br>
+          <form id="file-upload-form" action="/display" method="post" enctype="multipart/form-data">
+
+            <div id="input-div">
+              <label for="inputTag">
+                <p id="submit-sdf">Select SDF File</p> 
+                <input id="inputTag" type="file" name="file" accept=".sdf"/>
+                <br/>
+                <span id="fileName"></span>
+
+              </label>
+            </div><br>
+            <label for="input-element" class="input">Element name</label>
+            <input type="text" id="input-element" name="input-element" required="required">
+            <input type="submit" id="file-input" class="box hidden" style="margin: 20% 30%;" ></input>
+          </form>
+        
+      </div>
+      <div class="footer">
+        <p>Developed by Elman Islam (2022)
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js" type="text/javascript"></script>
+    <script src="script.js"></script>
+    <script>
+      // *** SHOW SUBMIT BUTTON FUNCTION ***
+      // FOR: add-molecule.html
+      // By default, the 'submit' button to submit a file.
+      // Show the submit button once the user selects a file
+      let input = document.getElementById("inputTag");
+      let fileName = document.getElementById("fileName");
+    
+      input.addEventListener("change", ()=> {
+          let inputImage = document.querySelector("input[type=file]").files[0];
+    
+          $(".hidden").removeClass("hidden");
+          fileName.innerText = inputImage.name;
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="style.css"></head>
+
+
+    <title>Remove Element</title>
+  </head>
+  <body>
+    <div class="container">
+
+      <div class="header">
+        <div class="logo">
+          <a href="/">molecule-webserver</a> / remove-element
+        </div>
+      </div>
+
+      <div class="content" style="display:inline-block; place-self: center">
+
+        <h1>Remove Element</h1>
+
+          <br>
+
+          <form action="/delete-element" method="POST">
+          <table>
+            <tr id="element-columns">
+              <th>Number</th>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Color 1</th>
+              <th>Color 2</th>
+              <th>Color 3</th>
+              <th>Radius</th>
+            </tr>
+          </table>
+          </form>
+       
+      </div>
+
+      <div class="footer">
+        <p>Developed by Elman Islam (2022)
+      </div>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js" type="text/javascript"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
