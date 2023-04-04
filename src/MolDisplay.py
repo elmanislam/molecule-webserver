@@ -131,7 +131,6 @@ class Molecule(molecule):
     numbers = (lines[count].strip()).split(); #read the 4th line and find each number i-0we
 
     if (len(numbers)) < 3: #First line must have seven arguments
-      print("krabs");
 
       return False; # return false to indicate an invalid sdf file
 
@@ -141,11 +140,9 @@ class Molecule(molecule):
       num_bonds = int(numbers[1]);
 
     except ValueError:
-      print("mr");
 
       return False;
     except IndexError:
-      print("mr");
 
       return False;
 
@@ -159,11 +156,9 @@ class Molecule(molecule):
         temp_y = float(numbers[1]);
         temp_z = float(numbers[2]);
       except ValueError:
-        print("yeah");
 
         return False;
       except IndexError:
-        print("yeah");
 
         return False;
         
@@ -179,10 +174,8 @@ class Molecule(molecule):
         temp_epairs = int(numbers[2]);
         int(numbers[0]) - 1, int(numbers[1]) - 1, int(numbers[2]);
       except ValueError:
-        print("Oh");
         return False;
       except IndexError:
-        print("Oh");
         return False;
 
       self.append_bond(temp_a1, temp_a2, temp_epairs);
