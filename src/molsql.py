@@ -116,15 +116,7 @@ class Database():
     
     atom_data = (atom.element, atom.x, atom.y, atom.z);
 
-    element_exists = self.conn.execute(f"SELECT ELEMENT_CODE FROM Elements WHERE Elements.ELEMENT_CODE='{atom.element}'").fetchone();
-
-    if element_exists == None: # If the element does not exist, create default values for it
-        if atom.element in DEFAULT_ELEMENTS.keys():
-            t = DEFAULT_ELEMENTS.get(atom.element);
-            self['Elements'] = (t[0], atom.element, t[1], t[2], t[3], t[4], t[5]);
-          
-        else:
-            self['Elements'] =  (0, atom.element, 'Unnamed Element', 'FFFFFF', '969696', '000000', 40 );
+    self.add_default(atom.element); # check if 'atom.element' does not exist in the 'Elements' table 
 
     self.conn.execute("INSERT INTO Atoms(ELEMENT_CODE, X, Y, Z) VALUES(?, ?, ?, ?)", atom_data);
     id = self.conn.execute("SELECT last_insert_rowid()").fetchone(); # obtain the most recently created id from any table
@@ -188,6 +180,8 @@ class Database():
     """, (name,)).fetchall(); 
 
     for i in atom_args:
+      self.add_default(i[1]); # check if the element code does not exist in the 'Elements' table 
+      
       mol.append_atom(i[1], i[2], i[3], i[4]);
 
     bond_args = self.conn.execute(""" SELECT Bonds.BOND_ID, Bonds.A1, Bonds.A2, Bonds.EPAIRS
@@ -257,3 +251,17 @@ class Database():
  xmlns="http://www.w3.org/2000/svg">""";
     
     MolDisplay.header += self.radial_gradients();
+
+  ## Helper function: checks if the element exists in the 'Elements' table
+  ## If it does not exist, add the default element values for it using the 'DEFAULT_ELEMENTS' dictionary
+  def add_default( self, element_name ):
+
+    element_exists = self.conn.execute(f"SELECT ELEMENT_CODE FROM Elements WHERE Elements.ELEMENT_CODE='{element_name}'").fetchone();
+
+    if element_exists == None: # If the element does not exist, create default values for it
+      if element_name in DEFAULT_ELEMENTS.keys():
+          t = DEFAULT_ELEMENTS.get(element_name);
+          self['Elements'] = (t[0], element_name, t[1], t[2], t[3], t[4], t[5]);
+        
+      else: # If the element is also not in 'DEFAULT_ELEMENTS', create a black 'unnamed element' with special id 0
+          self['Elements'] =  (0, element_name, 'Unnamed Element', 'FFFFFF', '969696', '000000', 40 );

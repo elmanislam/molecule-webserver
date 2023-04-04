@@ -12,7 +12,6 @@ if _swig_python_version_info < (2, 7, 0):
 if __package__ or "." in __name__:
     from .lib import _molecule
 else:
-
     import _molecule
 
 try:
@@ -131,8 +130,23 @@ class molecule(object):
     def sort(self):
         return _molecule.molecule_sort(self)
 
+    def xform(self, xform_matrix):
+        return _molecule.molecule_xform(self, xform_matrix)
+
 # Register molecule in _molecule:
 _molecule.molecule_swigregister(molecule)
+
+class mx_wrapper(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    xform_matrix = property(_molecule.mx_wrapper_xform_matrix_get, _molecule.mx_wrapper_xform_matrix_set)
+
+    def __init__(self, xrot, yrot, zrot):
+        _molecule.mx_wrapper_swiginit(self, _molecule.new_mx_wrapper(xrot, yrot, zrot))
+    __swig_destroy__ = _molecule.delete_mx_wrapper
+
+# Register mx_wrapper in _molecule:
+_molecule.mx_wrapper_swigregister(mx_wrapper)
 
 
 def atomset(atom, element, x, y, z):
@@ -185,5 +199,25 @@ def compareAtoms(a, b):
 
 def bond_comp(a, b):
     return _molecule.bond_comp(a, b)
+class rotations(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+    x = property(_molecule.rotations_x_get, _molecule.rotations_x_set)
+    y = property(_molecule.rotations_y_get, _molecule.rotations_y_set)
+    z = property(_molecule.rotations_z_get, _molecule.rotations_z_set)
+
+    def __init__(self):
+        _molecule.rotations_swiginit(self, _molecule.new_rotations())
+    __swig_destroy__ = _molecule.delete_rotations
+
+# Register rotations in _molecule:
+_molecule.rotations_swigregister(rotations)
+
+
+def spin(mol):
+    return _molecule.spin(mol)
+
+def rotationsfree(rotations):
+    return _molecule.rotationsfree(rotations)
 
 

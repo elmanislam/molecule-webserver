@@ -1,13 +1,15 @@
+import sys;
 import os;
 from http.server import HTTPServer, BaseHTTPRequestHandler;
 from src import MolDisplay;
+from src import molecule;
 from src import molsql;
 import cgi;
-
+import json;
 
 ## GLOBAL CONSTANT VARIABLES ##
 
-PORT = 56272; # main port host server on
+PORT = 8000; # main port host server on; default port is 8000
 PATH = os.path.realpath(__file__); # path to current file
 DIR = os.path.dirname(PATH); # name of current directory
 HTML = DIR + "/templates";
@@ -16,11 +18,11 @@ HTML = DIR + "/templates";
 
 class MyHandler( BaseHTTPRequestHandler ):
 
-  db = molsql.Database(reset=True);
-  db.create_tables();
+  db = molsql.Database(reset=True); # Create a database attribute for the server
+  db.create_tables(); # also set up tables
 
-  pages = [ '/add-molecule.html', '/add-element.html', '/remove-element.html', '/view-molecule.html', '/display.html'];
-
+  pages = [ '/index.html', '/add-molecule.html', '/add-element.html', '/remove-element.html', '/view-molecule.html', '/display.html'];
+  # all web pages
   
   def do_GET(self):
     if self.path == "/":
@@ -59,7 +61,8 @@ class MyHandler( BaseHTTPRequestHandler ):
               html_content = ""
               for entry in table:
                 tempMol = self.db.load_mol(entry[1]);
-                
+                self.db.update_database();
+
                 html_content += f"<tr name={entry[1]} class='molecule-entry'>"
 
                 for i in entry:
@@ -164,19 +167,14 @@ class MyHandler( BaseHTTPRequestHandler ):
         temp_dict = self.db.element_name()
         if (temp_dict): # if the dictionary is not empty
             if symbol in temp_dict: # if the element already exists 
-                print("Element " + str(symbol) + " Already exists");
                 self.db.conn.execute(f" DELETE FROM Elements WHERE ELEMENT_CODE='{symbol}';") # delete the element
                 alert_element_success = alert_element_success.replace("submitted", "updated"); # change message to "updated"
           
-        print("colors:")
- 
         colour1 = str(colour1).replace('#', '').upper();
         colour2 = str(colour2).replace('#', '').upper();
         colour3 = str(colour3).replace('#', '').upper();
-        print(colour1, colour2, colour3);
 
         self.db['Elements'] = ( id, symbol, element, colour1, colour2, colour3, radius); # add or update the element
-
 
         fp = open(HTML  + '/index.html'); 
         web_page = fp.read();
@@ -190,7 +188,7 @@ class MyHandler( BaseHTTPRequestHandler ):
         )
 
         # create and send headers
-        self.send_response(301 );  # OK
+        self.send_response( 200 );  # OK
         self.send_header( "Content-type", "text/html" );
         self.send_header( "Content-length", len(web_page) );
 
@@ -207,7 +205,9 @@ class MyHandler( BaseHTTPRequestHandler ):
 
             self.db.conn.execute(f" DELETE FROM Elements WHERE ELEMENT_CODE={deleteElement};")
 
-      elif self.path == '/display':
+
+
+      elif self.path == '/upload-sdf':
             # Get the content type and length
             content_type = self.headers['Content-Type']
             content_length = int(self.headers['Content-Length'])
@@ -235,41 +235,28 @@ class MyHandler( BaseHTTPRequestHandler ):
             alert_message = ""
             if molecule_exists != None: # The molecule already exists
 
-                alert_message = '''
-                <script>
-
-                    alert('The molecule already exists');
-
-                </script>
-                '''            
+                alert_message =  "<script>alert('The molecule already exists')</script>"          
                 alert_message = alert_message.replace('molecule', 'molecule ' + str(molecule_name))
 
             else: # The molecule is new; add it to the table
-
-                web_fp = open(HTML  + '/display.html'); 
-                web_page = web_fp.read();
-                web_fp.close();
-
+                alert_message = "<script>alert('Successfully uploaded the sdf file')</script>"
                 fp = open(DIR + '/temp_output_file.txt', 'wb')
                 fp.write(file_data)
                 fp.close();
 
                 fp = open(DIR + "/temp_output_file.txt");
 
-
                 self.db.add_molecule(molecule_name, fp);
                 self.db.update_database();
 
                 mol = self.db.load_mol(molecule_name);
+                self.db.update_database();
 
-                web_page = web_page.replace("</h1>", molecule_name + " Molecule</h1>");
-                web_page = web_page.replace("<svg></svg>", mol.svg());
                 os.remove(DIR + "/temp_output_file.txt") # Delete the temporary file after obtaining information
 
-
-            web_page = web_page.replace('<body>', '<body>' + alert_message)
+            web_page = web_page.replace('</body>', alert_message + '</body>')
             # Send a response
-            self.send_response(301 );  # OK
+            self.send_response( 200 );  # OK
             self.send_header( "Content-type", "text/html" );
             self.send_header( "Content-length", len(web_page) );
 
@@ -278,47 +265,88 @@ class MyHandler( BaseHTTPRequestHandler ):
 
 
       elif self.path == '/display-molecule':
-          
           content_length = int(self.headers['Content-Length']);
           body = self.rfile.read(content_length);
 
           molecule_name = str(repr( body.decode('utf-8') ))
 
           molecule_name = molecule_name.strip("\'");
-          molecule_name = molecule_name.strip('\"');
-          molecule_name.strip("\'")
-          print("Molecule Name: ");
-          print(molecule_name);
-
-          self.db.update_database();
-          mol = self.db.load_mol(molecule_name);
 
           web_fp = open(HTML  + '/display.html'); 
           web_page = web_fp.read();
           web_fp.close();
 
           mol = self.db.load_mol(molecule_name);
-          print(mol.svg())
+          self.db.update_database();
 
-          web_page = web_page.replace("</h1>", molecule_name + " Molecule</h1>");
+          web_page = web_page.replace('id="molecule-name">', f'name="{molecule_name}" id="molecule-name">' + molecule_name);
           web_page = web_page.replace("<svg></svg>", mol.svg());
-
-          self.send_response(200 );  # OK
+          alert_message =  "<script>alert('The molecule already exists')</script>"       
+          web_page = web_page.replace("</body>", alert_message + "</body>");
+   
+          self.send_response( 200 );  # OK
           self.send_header( "Content-type", "text/html" );
           self.send_header( "Content-length", len(web_page) );
 
           self.end_headers();
           self.wfile.write( bytes( web_page, "utf-8" ) );     
 
-      else: # unrecognized path
-          self.send_response( 404 );
+
+      elif self.path == '/display-rotate':
+          content_length = int(self.headers['Content-Length']);
+          body = self.rfile.read(content_length);
+
+          string_data = str(repr( body.decode('utf-8') )).replace("\'", "");
+          rotation_data = string_data.split('&');
+
+          molecule_name = rotation_data[0].split('=');
+          molecule_name = molecule_name[1];
+          degrees = rotation_data[1].split('=');
+          degrees = int(degrees[1]);
+          dimension =  rotation_data[2].split('=');
+          dimension = dimension[1];
+
+          print(molecule_name, degrees, dimension);
+
+          tempMol = self.db.load_mol(molecule_name);
+          self.db.update_database();
+
+          mx = molecule.mx_wrapper(0,0,0);
+
+          if (dimension == 'X'):
+            mx = molecule.mx_wrapper(degrees,0,0);
+          elif (dimension == 'Y'):
+            mx = molecule.mx_wrapper(0,degrees,0);
+          elif (dimension == 'Z'):
+            mx = molecule.mx_wrapper(0,0,degrees);
+
+          print("\nBefore:");
+          print(tempMol.svg());
+
+          tempMol.xform( mx.xform_matrix );
+
+
+          new_svg = tempMol.svg();
+          print("\nAfter:");
+          print(new_svg);
+          self.send_response( 200 );  # OK
+          self.send_header( "Content-type", "text/html" );
+          self.send_header( "Content-length", len(new_svg) );
+
           self.end_headers();
-          self.wfile.write( bytes( "404: not found", "utf-8" ) );
+          self.wfile.write( bytes( new_svg, "utf-8" ) );     
 
 
 if __name__ == '__main__':
-    server_address = ('', PORT)
+    
+    local_port = PORT;
+
+    if len(sys.argv) > 1:
+        local_port = int(sys.argv[1])
+
+    server_address = ('localhost', local_port);
+
     httpd = HTTPServer(server_address, MyHandler)
-    print(f'Server running on http://localhost:{PORT}')
+    print(f'Server running on http://localhost:{local_port}')
     httpd.serve_forever()
 

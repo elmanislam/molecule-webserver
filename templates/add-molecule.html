@@ -7,19 +7,15 @@
 
     <link rel="stylesheet" type="text/css" href="style.css"></head>
 
-    <style type="text/css">
 
-
-
-    </style>
-    <title>Add Element</title>
+    <title>Add Molecule</title>
   </head>
   <body>
     <div class="container">
 
       <div class="header">
         <div class="logo">
-          <a href="/">molecule-webserver</a> / add-molecule
+          <a href="/">⌂ molecule-webserver</a> / add-molecule
         </div>
       </div>
 
@@ -28,30 +24,31 @@
         <h1>Add Molecule</h1>
 
           <br>
-          <form id="file-upload-form" action="/display" method="post" enctype="multipart/form-data">
-
+          <form id="file-upload-form" action="/upload-sdf" method="post" enctype="multipart/form-data">
+            <label for="inputTag">
             <div id="input-div">
-              <label for="inputTag">
                 <p id="submit-sdf">Select SDF File</p> 
                 <input id="inputTag" type="file" name="file" accept=".sdf"/>
                 <br/>
                 <span id="fileName"></span>
 
               </label>
-            </div><br>
-            <label for="input-element" class="input">Element name</label>
+            </div>
+          </label><br>
+            <label for="input-element" class="input" >Element name</label>
             <input type="text" id="input-element" name="input-element" required="required">
-            <input type="submit" id="file-input" class="box hidden" style="margin: 20% 30%;" ></input>
+            <input type="submit" id="file-input" class="box hidden" style="margin: 20% 30%;" >
           </form>
         
       </div>
       <div class="footer">
-        <p>Developed by Elman Islam (2022)
+        <p>Developed by Elman Islam (2023)</p>
       </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js" type="text/javascript"></script>
     <script src="script.js"></script>
     <script>
+
       // *** SHOW SUBMIT BUTTON FUNCTION ***
       // FOR: add-molecule.html
       // By default, the 'submit' button to submit a file.

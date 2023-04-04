@@ -1,5 +1,29 @@
-$(document).ready(function() {
+function RUN() {
+  slider = document.getElementById("rot");
+  molecule_name = document.getElementById("molecule-name").getAttribute("name");
+  dimension = document.getElementById("dimension").value;
+  degrees = slider.value;
+  rotation_data = {molecule_name, degrees, dimension};
+  $.ajax({
+    type: "POST",
+    url: "/display-rotate",
+    data: rotation_data,
 
+    success: function(response) {
+      // Request successful, do something with response
+      old_svg = document.querySelector(".svg-container");
+      old_svg.innerHTML = response;
+
+    },
+    error: function(xhr, status, error) {
+      // Request failed, handle error
+      console.log(error);
+    }
+
+  });
+}
+
+$(document).ready(function() {
   // *** UPLOAD ELEMENT FUNCTION ***
   // FOR: add-element.html
   // Send form containing element data to 
@@ -54,6 +78,7 @@ $(document).ready(function() {
 
       });
       
+      alert("successfully removed element " + name);
       window.location.replace('/remove-element.html');
 
     }
@@ -100,20 +125,66 @@ $(document).ready(function() {
 
   // add event listener for each row in the table
   for (let entry of moleculeEntries) {
-
     entry.addEventListener("click", moleculeEntryPressed);
   }
 
+    /* add a click handler for our button */
+    $("#submit-rotation").click(
+      function()
+      {
+    /* ajax post */
+    $.post("/display-rotate",
+      /* pass a JavaScript dictionary */
+      {
+        name: $("h1").attr("name"),	/* retreive value of name field */
+        extra_info: "some stuff here"
+      },
+      function( data, status )
+      {
+        alert( "Data: " + data + "\nStatus: " + status );
+      }
+    );
+        }
+      );
+  
+
+/*
+  $('#display-rotate').submit(function(event) {
+    event.preventDefault();
+    let formData = new FormData(this)
+    formData.append("Molecule Name", $("h1").attr("name"))
+    alert(formData);
+
+   $.ajax({
+     url: '/display-rotate',
+     type: 'POST',
+     data: $("#display-rotate").serialize(),
+     success: function(response) {
+       alert("success");
+     },
+     error: function(jqXHR, textStatus, errorThrown) {
+       console.log(textStatus, errorThrown);
+     }
+   });
+ });*/
+
+
 });
+
+
+
 
 (function () {
   let old = console.log;
   let logger = document.getElementById('log');
+
   console.log = function (message) {
       if (typeof message == 'string') {
-
-        if (message.includes("<!DOCTYPE html>"))
+        if (message.includes("<!DOCTYPE html>")) {
           document.documentElement.innerHTML = message;
+        }
       }
+
   }
 })();
+

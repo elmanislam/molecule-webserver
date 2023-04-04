@@ -275,3 +275,11 @@ int bond_comp(const void * a, const void * b) {
   
 }
 
+void rotationsfree( rotations *rotations ) {
+  printf("Woo yeah baby\n");
+}
+
+rotations *spin( molecule *mol ) {
+  printf("that's what i've been waiting for\n");
+  return NULL;
+}

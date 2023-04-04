@@ -30,13 +30,16 @@ TESTS AND COMMENTS
     - remove 'from lib' in molecule.py
 
 ERRORS
-
   - ImportError: libmol.so: cannot open shared object file: No such file or directory
   - no such module: _molecule
       make sure molecule.py is in the src directory, and on 13
       change "from . import _molecule" to "from .lib import _molecule"
 
-
+TO DO 
+  - Add rotation to molecules
+  - make 'remove-element' page visually display colours instead of hex codes 
+  - make 'add-molecule' page check for malicious sdf files before uploading them 
+  - test webserver on nomachine
 
 QUESTIONS
 When I compile make, I get a warning message indicating that the 
@@ -44,9 +47,6 @@ When I compile make, I get a warning message indicating that the
 
 Should I make a command in my makefile that creates the molecule_wrap.c and molecule.py
 files with swig, or will you already have the files ready when you test my program?
-
-
-sources for html and css: https://getcssscan.com/css-box-shadow-examples
 
 
 

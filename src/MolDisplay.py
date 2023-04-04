@@ -8,7 +8,7 @@ footer = """</svg>""";
 offsetx = 500;
 offsety = 500;
 
- 
+
 class Atom:
   def __init__(self, c_atom):
     self.atom = c_atom;
