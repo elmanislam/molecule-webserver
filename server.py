@@ -51,7 +51,11 @@ class MyHandler( BaseHTTPRequestHandler ):
               for entry in table:
                 html_content += f"<tr name={entry[1]} class='element-entry'>"
                 for i in entry:
-                   html_content += f"<td>{i}</td>"
+                    if len(str(i)) == 6 and i != entry[2]:
+                      html_content += f"<td style='font-weight: 900; color:#{i}'>#{i}</td>"
+                    else:
+                      html_content += f"<td>{i}</td>"
+
                 html_content += "</tr>"
               web_page = web_page.replace("</table>", html_content + "</table>");
   
@@ -307,8 +311,6 @@ class MyHandler( BaseHTTPRequestHandler ):
           dimension =  rotation_data[2].split('=');
           dimension = dimension[1];
 
-          print(molecule_name, degrees, dimension);
-
           tempMol = self.db.load_mol(molecule_name);
           self.db.update_database();
 
@@ -321,15 +323,13 @@ class MyHandler( BaseHTTPRequestHandler ):
           elif (dimension == 'Z'):
             mx = molecule.mx_wrapper(0,0,degrees);
 
-          print("\nBefore:");
-          print(tempMol.svg());
+
 
           tempMol.xform( mx.xform_matrix );
 
 
           new_svg = tempMol.svg();
-          print("\nAfter:");
-          print(new_svg);
+
           self.send_response( 200 );  # OK
           self.send_header( "Content-type", "text/html" );
           self.send_header( "Content-length", len(new_svg) );

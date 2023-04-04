@@ -31,7 +31,6 @@ $(document).ready(function() {
   $('#upload-element').submit(function(event) {
      //event.preventDefault();
      let formData = new FormData(this)
-     console.log(formData)
 
 
     $.ajax({
@@ -57,8 +56,7 @@ $(document).ready(function() {
   const elementEntries = $(".element-entry");
 
   const elementEntryPressed = e => {
-    let name = $(e.target).parent().attr("name");
-    console.log(e.target);  // Get ID of Clicked Element
+    let name = $(e.target).parent().attr("name"); // get ID of clicked element
     let result = confirm(`Delete Element ${name}?`);
     if (result  == true ) {
 
@@ -146,32 +144,8 @@ $(document).ready(function() {
     );
         }
       );
-  
-
-/*
-  $('#display-rotate').submit(function(event) {
-    event.preventDefault();
-    let formData = new FormData(this)
-    formData.append("Molecule Name", $("h1").attr("name"))
-    alert(formData);
-
-   $.ajax({
-     url: '/display-rotate',
-     type: 'POST',
-     data: $("#display-rotate").serialize(),
-     success: function(response) {
-       alert("success");
-     },
-     error: function(jqXHR, textStatus, errorThrown) {
-       console.log(textStatus, errorThrown);
-     }
-   });
- });*/
-
 
 });
-
-
 
 
 (function () {
