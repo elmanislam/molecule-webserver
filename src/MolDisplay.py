@@ -131,7 +131,6 @@ class Molecule(molecule):
     numbers = (lines[count].strip()).split(); #read the 4th line and find each number i-0we
 
     if (len(numbers)) < 3: #First line must have seven arguments
-
       return False; # return false to indicate an invalid sdf file
 
 
@@ -140,10 +139,8 @@ class Molecule(molecule):
       num_bonds = int(numbers[1]);
 
     except ValueError:
-
       return False;
     except IndexError:
-
       return False;
 
     for i in range(num_atoms):
@@ -156,10 +153,8 @@ class Molecule(molecule):
         temp_y = float(numbers[1]);
         temp_z = float(numbers[2]);
       except ValueError:
-
         return False;
       except IndexError:
-
         return False;
         
       self.append_atom(temp_name, temp_x, temp_y, temp_z);
@@ -181,8 +176,5 @@ class Molecule(molecule):
       self.append_bond(temp_a1, temp_a2, temp_epairs);
 
 
-
     file_obj.close()
     return True;
-
-

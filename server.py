@@ -350,4 +350,3 @@ if __name__ == '__main__':
     httpd = HTTPServer(server_address, MyHandler)
     print(f'Server running on http://localhost:{local_port}')
     httpd.serve_forever()
-
