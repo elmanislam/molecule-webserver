@@ -129,22 +129,54 @@ class Molecule(molecule):
     lines = rfile_str.split('\n'); 
 
     numbers = (lines[count].strip()).split(); #read the 4th line and find each number i-0we
-    num_atoms = int(numbers[0]);
-    num_bonds = int(numbers[1]);
+
+    if (len(numbers)) != 7: #First line must have seven arguments
+      return False; # return false to indicate an invalid sdf file
+
+
+    try:
+      num_atoms = int(numbers[0]);
+      num_bonds = int(numbers[1]);
+
+    except ValueError:
+      return False;
+    except IndexError:
+      return False;
 
     for i in range(num_atoms):
       count += 1;
       numbers = (lines[count].strip()).split();
-      self.append_atom(str(numbers[3]), float(numbers[0]), float(numbers[1]), float(numbers[2]));
+
+      try:
+        temp_name = str(numbers[3]);
+        temp_x =  float(numbers[0]);
+        temp_y = float(numbers[1]);
+        temp_z = float(numbers[2]);
+      except ValueError:
+        return False;
+      except IndexError:
+        return False;
+        
+      self.append_atom(temp_name, temp_x, temp_y, temp_z);
   
     for i in range(num_bonds):
       count += 1;
-
       numbers = (lines[count].strip()).split();
-      self.append_bond(int(numbers[0]) - 1, int(numbers[1]) - 1, int(numbers[2]));
+
+      try:
+        temp_a1 = int(numbers[0]) - 1;
+        temp_a2 = int(numbers[1]) - 1;
+        temp_epairs = int(numbers[2]);
+        int(numbers[0]) - 1, int(numbers[1]) - 1, int(numbers[2]);
+      except ValueError:
+        return False;
+      except IndexError:
+        return False;
+
+      self.append_bond(temp_a1, temp_a2, temp_epairs);
 
 
     file_obj.close()
-    
+    return True;
 
 

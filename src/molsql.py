@@ -146,8 +146,9 @@ class Database():
   def add_molecule(self, name, fp ):
 
     mol = MolDisplay.Molecule();
-    mol.parse(fp);
-   
+    isValid = mol.parse(fp);
+    if isValid == False:
+      return False;
     self.conn.execute("INSERT INTO Molecules(NAME) VALUES( ? )", (name,));
 
     # cycle through all atoms and bonds, and then add them
@@ -161,7 +162,7 @@ class Database():
       self.add_bond(name, temp_bond.bond);
 
     self.conn.commit();
-  
+    return True;
 
   def load_mol( self, name ):
 

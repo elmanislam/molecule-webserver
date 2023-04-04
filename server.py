@@ -246,11 +246,12 @@ class MyHandler( BaseHTTPRequestHandler ):
 
                 fp = open(DIR + "/temp_output_file.txt");
 
-                self.db.add_molecule(molecule_name, fp);
-                self.db.update_database();
+                isValid = self.db.add_molecule(molecule_name, fp); # check if the sdf is valid
+                if (isValid == False): # send error message if it is invalid
+                  alert_message =  "<script>alert('The uploaded file is an invalid SDF')</script>"          
 
-                mol = self.db.load_mol(molecule_name);
-                self.db.update_database();
+                else: # otherwise it will be added to the database; update the database
+                  self.db.update_database();
 
                 os.remove(DIR + "/temp_output_file.txt") # Delete the temporary file after obtaining information
 
