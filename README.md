@@ -75,7 +75,7 @@ This project was initally made for a school course, but has since then been exte
 <u><b>To compile the program, open your terminal and follow these instructions:</b></u>
 
 1. Find the molecule-webserver directory in your file explorer and copy the filepath
-2. `cd [path/to/molecule-webserver]` ; make sure the slash symbols are / , and not \ . If they aren't, you will have to change them manually, which can be a bit tedious. save the filepath with the / for running the program in the futre
+2. `cd [path/to/molecule-webserver]` ; make sure the slash symbols are / , and not \ . If they aren't, you will have to change them manually, which can be a bit tedious. Save the filepath with the / for running the program in the future
 3. `export LD_LIBRARY_PATH=:[path/to/webserver]/src/lib` ; Make sure to type `/src/lib` after pasting the file directory in the command, otherwise the program will produce an error when you run it
 4. `make clean` and then `make`
 5. `python3 server.py [optional port number]` ; you can type a specified port number if you want, but otherwise the default port is `8000`
