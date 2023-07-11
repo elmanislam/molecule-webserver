@@ -86,10 +86,10 @@ The `server.py` file contains a main method that creates a server using the http
 ### Why am I getting an error?
 Below are some possible errors you might run into due to incorrect commands or missing resources
 * <i><b>ImportError: libmol.so: cannot open shared object file: No such file or directory</b></i>
-This happens when your LD_LIBRARY_PATH variable does not correctly direct to the `lib` directory in the project. go back to step 3 and make sure you are correctly assigning the variable to the right filepath
+This happens when your LD_LIBRARY_PATH variable does not correctly direct to the `lib` directory in the project. go back to step 3 and make sure you are correctly assigning the variable to the right filepath.
 - <i><b>no such module: _molecule</b></i>
       make sure molecule.py is in the src directory, and on line 13,
-      change the line "`from . import _molecule`" to "`from .lib import _molecule`"
+      change the line "`from . import _molecule`" to "`from .lib import _molecule`".
 * <i><b>C/molecule_wrap.c:154:11: fatal error: 'Python.h' file not found</b></i>
 	Your system may not have python installed, or the incorrect version is being used. run the following command: `python3 --version` And if nothing comes up you will have to install python with `sudo apt install python3`. But if an output <em>does</em> come up, open the makefile and for the variables `PY_HEADER` and `PY_LIB` (lines 5 and 6), change the `3.9` in the file paths to whatever number was printed when you checked your python3 version.
 
