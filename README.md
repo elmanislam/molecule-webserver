@@ -69,7 +69,7 @@ This project was initally made for a school course, but has since then been exte
 └── ...
 ```
 
-## How to Run
+# Installation
 **This program assumes that you are running commands on a linux or mac terminal (ubuntu, MacOS, debian, etc).*
 
 <u><b>To compile the program, open your terminal and follow these instructions:</b></u>
